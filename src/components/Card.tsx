@@ -18,7 +18,7 @@ const StyledCard = styled.div`
 
 const Card: React.FC<Props> = ({ title, description, num }) => {
   return (
-    <StyledCard className='flex min-h-[162px] w-full h-full gap-4 flex-col md:flex-row 2xl:flex-col 2xl:items-center 2xl:max-w-[384px] 2xl:min-h-[550px] 2xl:max-h-[550px]'>
+    <StyledCard className='flex min-h-[162px] w-full h-full gap-4 flex-col md:flex-row md:max-w-[750px] 2xl:flex-col 2xl:items-center 2xl:max-w-[384px] 2xl:min-h-[550px] 2xl:max-h-[550px]'>
       <span className='text-c-blue text-[24px] hidden md:block md:text-f-heading-l md:pr-8 2xl:pr-0'>
         {num}
       </span>
