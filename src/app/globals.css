@@ -15,16 +15,22 @@ body {
 }
 
 @layer components {
-  .stroke {
+  .stroke-ingame {
+    -webkit-text-stroke: 4px #243041;
+  }
+  .stroke-home {
     -webkit-text-stroke: 2px #243041;
   }
   @media screen and (min-width: 768px) {
-    .stroke {
+    .stroke-home {
       -webkit-text-stroke-width: 5px;
+    }
+    .stroke-ingame {
+      -webkit-text-stroke-width: 6px;
     }
   }
   @media screen and (min-width: 1440px) {
-    .stroke {
+    .stroke-home {
       -webkit-text-stroke-width: 6px;
     }
   }
