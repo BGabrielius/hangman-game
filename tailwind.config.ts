@@ -27,6 +27,9 @@ const config: Config = {
       boxShadow: {
         's-primary': '0 -3px 0px 3px #3C74FF, 0 -1px 0 6px #140e66',
         's-secondary': '0 -3px 0px 3px #C642FB, 0 -1px 0 6px #140e66',
+        's-util-play': '0 8px 0 7px #9D2DF5, 0 12px 0 11px #243041',
+        's-util-lg': '0 5px 0 6px rgba(157, 45, 245, 0.75)',
+        's-util-sm': '0 4px 0 1px rgba(157, 45, 245, 0.75)',
       },
     },
     fontSize: {
