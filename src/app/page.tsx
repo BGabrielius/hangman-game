@@ -29,7 +29,10 @@ export default function Home() {
             <Logo />
           </div>
           <div></div>
-          <UtilButton action={() => router.push('/category')} type='lg' />
+          <UtilButton
+            action={() => router.push('/categories')}
+            type='lg-play'
+          />
           <Button
             text='HOW TO PLAY'
             action={() => router.push('/howtoplay')}
