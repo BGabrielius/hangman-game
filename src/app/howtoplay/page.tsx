@@ -12,13 +12,13 @@ const page = () => {
     <main>
       <section className='flex justify-between items-center mb-20 md:mb-14'>
         <UtilButton action={() => router.replace('/')} type='sm-back' />
-        <h2 className='stroke bg-gradient-to-b from-gradient-text to-white text-gradient-text text-transparent bg-clip-text text-[48px] md:text-[104px] 2xl:text-f-heading-xl'>
+        <h2 className='stroke-home bg-gradient-to-b from-gradient-text to-white text-gradient-text text-transparent bg-clip-text text-[48px] md:text-[104px] 2xl:text-f-heading-xl'>
           How to Play
         </h2>
 
         <div className='hidden sm:block'></div>
       </section>
-      <section className='w-full h-full flex flex-col gap-6 2xl:flex-row 2xl:items-center 2xl:justify-center'>
+      <section className='w-full h-full flex flex-col gap-6 2xl:flex-row md:items-center 2xl:justify-center'>
         <Card
           title='CHOOSE A CATEGORY'
           description='First, choose a word category, like animals or movies. 
@@ -28,10 +28,10 @@ const page = () => {
         />
         <Card
           title='Guess letters'
-          description='Take turns guessing letters. The computer fills in the 
-          relevant blank spaces if your guess is correct. If it"s 
+          description="Take turns guessing letters. The computer fills in the 
+          relevant blank spaces if your guess is correct. If it's 
           wrong, you lose some health, which empties after eight 
-          incorrect guesses.'
+          incorrect guesses."
           num='02'
         />
         <Card
