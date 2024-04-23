@@ -23,7 +23,7 @@ export default function RootLayout({
     <html lang='en'>
       <StyledComponentsRegistry>
         <body
-          className={`${font.variable} font-sans min-h-screen bg-[url('../components/svg/Background.svg')] bg-cover bg-center px-[26px] py-8 md:px-12 2xl:py-[61px] 2xl:px-28`}
+          className={`${font.variable} font-sans min-h-screen bg-[url('../components/svg/Background.svg')] bg-cover bg-center px-[26px] py-8 md:pl-10 md:pr-12 2xl:py-[61px] 2xl:px-28`}
         >
           {children}
         </body>
