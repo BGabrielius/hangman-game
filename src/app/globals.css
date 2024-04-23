@@ -14,7 +14,16 @@ body {
   height: 100%;
 }
 
+::backdrop {
+  background-image: linear-gradient(45deg, #1a043a, #151278, #2b1677);
+  opacity: 0.75;
+}
+
 @layer components {
+  #letterParent:hover > #letterChild {
+    color: white;
+  }
+
   .stroke-ingame {
     -webkit-text-stroke: 4px #243041;
   }
