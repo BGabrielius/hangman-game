@@ -11,6 +11,11 @@ import styled from 'styled-components';
 import Modal from '@/components/Modal';
 import Letter from '@/components/Letter';
 
+// type CurrentGuessWork = {
+//   letter: string;
+//   correct: boolean;
+// };
+
 const StyledTopBar = styled.div`
   display: flex;
   align-items: center;
@@ -39,25 +44,40 @@ const page = () => {
   const [modalHeadline, setModalHeadline] = useState<
     'Paused' | 'You Win' | 'You Lose'
   >('Paused');
+  // current guesses
+  const [guessedLetters, setGuessedLetters] = useState<Set<string>>(new Set());
 
   useEffect(() => {
+    if (guessedLetters) console.log(guessedLetters);
     if (unknownWord) console.log('kek', unknownWord);
     if (!isMounted) {
       setIsMounted(true);
       selectGuessWord();
     }
-  }, [isMounted, category]);
+  }, [isMounted, category, guessedLetters]);
 
   const selectGuessWord = () => {
     if (data.categories.hasOwnProperty(category)) {
       const categoryData =
         data.categories[category as keyof typeof data.categories];
-      const selected = categoryData[Math.floor(30 * Math.random())];
+      let selected = categoryData[Math.floor(30 * Math.random())];
+
       selected.selected = true;
-      setUnknownWord(selected.name.toUpperCase().split(''));
+      setUnknownWord(selected.name.toUpperCase());
     }
     return;
   };
+  const guess = (e: any) => {
+    let guessed =
+      e.target.tagName == 'P'
+        ? e.target.innerText
+        : e.target.firstChild.innerText;
+
+    setGuessedLetters(
+      (prevGuessedLetters) => new Set(prevGuessedLetters.add(guessed))
+    );
+  };
+
   return (
     <main className='w-full flex flex-col items-center justify-between'>
       <section className='mb-20 w-full flex justify-between items-center'>
@@ -68,7 +88,10 @@ const page = () => {
           </h3>
         </StyledTopBar>
         <StyledTopBar>
-          <HealthBar reEvaluate={() => undefined} />
+          <HealthBar
+            reEvaluate={() => undefined}
+            onFalseGuess={() => undefined}
+          />
           <div className='w-[26px] h-[24px] md:w-[54px] md:h-[49px]'>
             <Heart />
           </div>
@@ -83,28 +106,38 @@ const page = () => {
         />
       )}
       <section className='h-full flex flex-col items-center justify-around gap-28'>
-        <div className='h-full w-full flex flex-wrap items-center justify-center gap-2 md:gap-5 2xl:gap-6'>
+        <div className='h-full w-full flex flex-wrap items-center justify-center gap-x-8 md:gap-x-16 lg:gap-x-20 2xl:gap-x-28 gap-y-3'>
           {unknownWord &&
-            unknownWord.map((letter: string, index: number) => (
-              <Letter
-                action={() => undefined}
-                letter={letter}
-                type='primary'
-                key={letter + index}
-              />
+            unknownWord.split(' ').map((word: string, index: number) => (
+              <ul
+                className='flex gap-2 md:gap-4 lg:gap-5 2xl:gap-6'
+                key={word + index}
+              >
+                {word.split('').map((letter: string, index: number) => (
+                  <Letter
+                    letter={letter}
+                    type='primary'
+                    key={letter + index}
+                    revealed={guessedLetters.has(letter)}
+                  />
+                ))}
+              </ul>
             ))}
         </div>
-        <div className='h-full w-full grid grid-cols-9 gap-y-6 gap-x-2 md:gap-x-4 2xl:gap-x-6'>
+        <div className='h-full w-[324px] md:w-[704px] 2xl:w-[1173px] grid grid-cols-9 gap-y-6 gap-x-2 md:gap-x-4 2xl:gap-x-6'>
           {alphabet &&
             alphabet
               .toUpperCase()
               .split('')
               .map((letter: string, index: number) => (
                 <Letter
-                  action={() => undefined}
+                  action={
+                    guessedLetters.has(letter) ? () => {} : (e: any) => guess(e)
+                  }
                   letter={letter}
                   type='secondary'
                   key={letter + index}
+                  selected={guessedLetters.has(letter)}
                 />
               ))}
         </div>
