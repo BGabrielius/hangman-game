@@ -10,7 +10,11 @@ const config: Config = {
     extend: {
       screens: {
         '2xl': '1440px',
-        sm: '475px',
+        lg: '1110px',
+        sm: '505px',
+      },
+      animation: {
+        'ping-once': 'ping 1s linear 1',
       },
       colors: {
         'c-darknavy': '#261676',
