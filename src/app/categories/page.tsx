@@ -5,7 +5,7 @@ import Category from '@/components/Category';
 import UtilButton from '@/components/UtilButton';
 import data from '../../data.json';
 
-const page = () => {
+const Page: React.FC = () => {
   const router = useRouter();
   return (
     <main className='flex flex-col items-center'>
@@ -31,4 +31,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

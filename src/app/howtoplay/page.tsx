@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import UtilButton from '@/components/UtilButton';
 import Card from '@/components/Card';
 
-const page = () => {
+const Page: React.FC = () => {
   const router = useRouter();
   return (
     <main>
@@ -45,4 +45,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
