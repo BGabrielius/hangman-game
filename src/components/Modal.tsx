@@ -1,5 +1,3 @@
-'use client';
-
 import { useEffect, useRef } from 'react';
 
 import Button from './Button';
@@ -37,7 +35,11 @@ const Modal: React.FC<Props> = ({ headline, openModal, closeModal }) => {
         {headline === 'Paused' ? (
           <Button text='CONTINIUE' action={closeModal} type='primary' />
         ) : (
-          <Button text='PLAY AGAIN' action={router.refresh} type='primary' />
+          <Button
+            text='PLAY AGAIN'
+            action={() => window.location.reload()}
+            type='primary'
+          />
         )}
         <Button text='NEW CATEGORY' action={router.back} type='primary' />
         <Button
