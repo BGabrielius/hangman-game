@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 
 import data from '../../../data.json';
+
 import UtilButton from '@/components/UtilButton';
 import HealthBar from '@/components/HealthBar';
 import { Heart } from '@/components/svg';
@@ -11,10 +12,18 @@ import styled from 'styled-components';
 import Modal from '@/components/Modal';
 import Letter from '@/components/Letter';
 
-// type CurrentGuessWork = {
-//   letter: string;
-//   correct: boolean;
-// };
+interface Health {
+  timesReduced: number;
+  current: number;
+}
+type SubCategory = {
+  name: string;
+  selected: boolean;
+};
+type WordToGuess = {
+  word: string;
+  count: number;
+};
 
 const StyledTopBar = styled.div`
   display: flex;
@@ -32,55 +41,96 @@ const StyledTopBar = styled.div`
 const page = () => {
   const params = useParams<{ category: string }>();
 
-  const [isMounted, setIsMounted] = useState<boolean>(false);
-  const [category, _setCategory] = useState<string>(
-    params.category.replace('%20', ' ')
-  );
-
-  const [unknownWord, setUnknownWord] = useState<any>();
+  const [unknownWord, setUnknownWord] = useState<WordToGuess>({
+    word: '',
+    count: 0,
+  });
   const alphabet: string = 'abcdefghijklmnopqrstuvwxyz';
-  // modal
+
   const [showModal, setShowModal] = useState<boolean>(false);
   const [modalHeadline, setModalHeadline] = useState<
     'Paused' | 'You Win' | 'You Lose'
   >('Paused');
-  // current guesses
-  const [guessedLetters, setGuessedLetters] = useState<Set<string>>(new Set());
+
+  const [allGuessedLetters, setAllGuessedLetters] = useState<Set<string>>(
+    new Set()
+  );
+  const [correctlyGuessedLetters, setCorrectlyGuessedLetters] = useState<
+    Set<string>
+  >(new Set());
+
+  const [health, setHealth] = useState<Health>({
+    timesReduced: 0,
+    current: 100,
+  });
+
+  const category: string = params.category.replace('%20', ' ');
 
   useEffect(() => {
-    if (guessedLetters) console.log(guessedLetters);
-    if (unknownWord) console.log('kek', unknownWord);
-    if (!isMounted) {
-      setIsMounted(true);
-      selectGuessWord();
+    if (
+      unknownWord.count &&
+      correctlyGuessedLetters.size === unknownWord.count
+    ) {
+      setModalHeadline('You Win');
+      setShowModal(true);
     }
-  }, [isMounted, category, guessedLetters]);
+    if (!unknownWord.word) selectGuessWord();
+  }, [correctlyGuessedLetters, allGuessedLetters, unknownWord]);
+  const onFalseGuess = () => {
+    if (health.timesReduced === 7) {
+      setHealth({ current: 0, timesReduced: 8 });
+      setModalHeadline('You Lose');
+      setShowModal(true);
+      return;
+    }
+
+    setHealth({
+      timesReduced: health.timesReduced + 1,
+      current: health.current - 12.5,
+    });
+  };
 
   const selectGuessWord = () => {
+    if (unknownWord.word) return;
     if (data.categories.hasOwnProperty(category)) {
       const categoryData =
         data.categories[category as keyof typeof data.categories];
-      let selected = categoryData[Math.floor(30 * Math.random())];
 
-      selected.selected = true;
-      setUnknownWord(selected.name.toUpperCase());
+      const unselectedCategoryData = categoryData.filter(
+        (item: SubCategory) => !item.selected
+      );
+
+      if (unselectedCategoryData.length === 0) return;
+
+      let randomIndex: number = Math.floor(
+        Math.random() * unselectedCategoryData.length
+      );
+      let selectedWord: SubCategory = unselectedCategoryData[randomIndex];
+      // selectedWord.selected = true;
+
+      setUnknownWord({
+        count: new Set(selectedWord.name.replaceAll(' ', '').toUpperCase())
+          .size,
+        word: selectedWord.name.toUpperCase(),
+      });
     }
-    return;
   };
   const guess = (e: any) => {
     let guessed =
       e.target.tagName == 'P'
         ? e.target.innerText
         : e.target.firstChild.innerText;
-
-    setGuessedLetters(
-      (prevGuessedLetters) => new Set(prevGuessedLetters.add(guessed))
-    );
+    if (unknownWord && unknownWord.word.split('').includes(guessed)) {
+      setCorrectlyGuessedLetters((prev) => new Set(prev.add(guessed)));
+    } else {
+      onFalseGuess();
+    }
+    setAllGuessedLetters((prev) => new Set(prev.add(guessed)));
   };
 
   return (
-    <main className='w-full flex flex-col items-center justify-between'>
-      <section className='mb-20 w-full flex justify-between items-center'>
+    <main className='w-full h-full flex flex-col items-center justify-between'>
+      <section className='mb-24 w-full flex justify-between items-center'>
         <StyledTopBar>
           <UtilButton type='sm-menu' action={() => setShowModal(true)} />
           <h3 className='text-white text-[40px] md:text-f-heading-m 2xl:text-f-heading-l'>
@@ -88,10 +138,7 @@ const page = () => {
           </h3>
         </StyledTopBar>
         <StyledTopBar>
-          <HealthBar
-            reEvaluate={() => undefined}
-            onFalseGuess={() => undefined}
-          />
+          <HealthBar currentHealth={health.current} />
           <div className='w-[26px] h-[24px] md:w-[54px] md:h-[49px]'>
             <Heart />
           </div>
@@ -108,7 +155,7 @@ const page = () => {
       <section className='h-full flex flex-col items-center justify-around gap-28'>
         <div className='h-full w-full flex flex-wrap items-center justify-center gap-x-8 md:gap-x-16 lg:gap-x-20 2xl:gap-x-28 gap-y-3'>
           {unknownWord &&
-            unknownWord.split(' ').map((word: string, index: number) => (
+            unknownWord.word.split(' ').map((word: string, index: number) => (
               <ul
                 className='flex gap-2 md:gap-4 lg:gap-5 2xl:gap-6'
                 key={word + index}
@@ -118,7 +165,7 @@ const page = () => {
                     letter={letter}
                     type='primary'
                     key={letter + index}
-                    revealed={guessedLetters.has(letter)}
+                    revealed={correctlyGuessedLetters.has(letter)}
                   />
                 ))}
               </ul>
@@ -132,12 +179,18 @@ const page = () => {
               .map((letter: string, index: number) => (
                 <Letter
                   action={
-                    guessedLetters.has(letter) ? () => {} : (e: any) => guess(e)
+                    allGuessedLetters.has(letter)
+                      ? () => {}
+                      : (
+                          e: React.MouseEvent<
+                            HTMLLIElement | HTMLParagraphElement
+                          >
+                        ) => guess(e)
                   }
                   letter={letter}
                   type='secondary'
                   key={letter + index}
-                  selected={guessedLetters.has(letter)}
+                  selected={allGuessedLetters.has(letter)}
                 />
               ))}
         </div>
