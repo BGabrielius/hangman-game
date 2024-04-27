@@ -13,10 +13,19 @@ const Letter: React.FC<Props> = ({
   revealed,
   selected,
 }) => {
+  const onKeyDown = (e: any) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      if (action) action(e);
+    }
+  };
   return (
     <li
       id={selected ? '' : 'letterParent'}
+      role={type === 'secondary' ? 'button' : 'listitem'}
+      tabIndex={type === 'secondary' && !selected ? 0 : -1}
+      aria-disabled={selected}
       onClick={action}
+      onKeyDown={onKeyDown}
       className={` 
     ${
       type === 'primary'
