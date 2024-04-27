@@ -1,15 +1,9 @@
 'use client';
+import { useRouter } from 'next/navigation';
 
 import Category from '@/components/Category';
 import UtilButton from '@/components/UtilButton';
-import { useRouter } from 'next/navigation';
 import data from '../../data.json';
-
-import React from 'react';
-// const fetchData = () => {
-//   const data = fetch('./data.json').then((results) => results.json());
-//   return data;
-// };
 
 const page = () => {
   const router = useRouter();

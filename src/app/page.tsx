@@ -1,15 +1,11 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { redirect } from 'next/navigation';
+import styled from 'styled-components';
 
 import Button from '@/components/Button';
-import Category from '@/components/Category';
-import Letter from '@/components/Letter';
 import UtilButton from '@/components/UtilButton';
 import { Logo } from '@/components/svg';
-
-import styled from 'styled-components';
 
 const StyledContainer = styled.div`
   display: flex;
@@ -38,13 +34,6 @@ export default function Home() {
             action={() => router.push('/howtoplay')}
             type='primary'
           />
-
-          {/* <Letter letter='A' action={() => undefined} type='primary' />
-        <Letter letter='A' action={() => undefined} type='secondary' />
-        <Button text='HOW TO PLAY' action={() => undefined} type='secondary' />
-        <Category category='MOVIES' action={() => undefined} />
-        <UtilButton action={() => undefined} type='sm-back' />
-        <UtilButton action={() => undefined} type='sm-menu' /> */}
         </StyledContainer>
       </StyledContainer>
     </StyledContainer>
