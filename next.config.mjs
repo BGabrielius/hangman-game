@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export',
+  basePath: '/hangman-game',
   compiler: {
     styledComponents: true,
   },
