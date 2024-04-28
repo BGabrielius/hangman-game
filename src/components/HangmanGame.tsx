@@ -1,13 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
 
 import data from '../data.json';
 
 import UtilButton from '@/components/UtilButton';
 import HealthBar from '@/components/HealthBar';
-import { Heart } from '@/components/svg';
+import Heart from '@/components/svg/Heart';
 import styled from 'styled-components';
 import Modal from '@/components/Modal';
 import Letter from '@/components/Letter';

@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Play } from './svg';
-import { Menu } from './svg';
-import { Back } from './svg';
+import Play from './svg/Play';
+import Menu from './svg/Menu';
+import Back from './svg/Back';
 
 interface Props {
   action: () => void;
