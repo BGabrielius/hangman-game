@@ -19,7 +19,6 @@ Users should be able to:
 
 ### Links
 
-- Solution URL: [https://github.com/BGabrielius/hangman-game]
 - Live Site URL: [https://bgabrielius.github.io/hangman-game]
 
 ### Built with
