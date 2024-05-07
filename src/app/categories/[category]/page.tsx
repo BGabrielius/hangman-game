@@ -3,9 +3,9 @@ import HangmanGame from '@/components/HangmanGame';
 export async function generateStaticParams() {
   return [
     { category: 'Movies' },
-    { category: 'TV Shows' },
+    { category: 'TV%20Shows' },
     { category: 'Countries' },
-    { category: 'Capital Cities' },
+    { category: 'Capital%20Cities' },
     { category: 'Animals' },
     { category: 'Sports' },
   ];
