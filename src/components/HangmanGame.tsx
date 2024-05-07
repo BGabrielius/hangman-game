@@ -75,14 +75,16 @@ const HangmanGame: React.FC<Props> = ({ params }) => {
       correctlyGuessedLetters.size === unknownWord.count
     ) {
       setModalHeadline('You Win');
+      updateSelectedHistory();
       setShowModal(true);
     }
-    if (!unknownWord.word) selectGuessWord();
+    if (!unknownWord.word) filtedUnselectedWords();
   }, [correctlyGuessedLetters, allGuessedLetters, unknownWord]);
   const onFalseGuess = () => {
     if (health.timesReduced === 7) {
       setHealth({ current: 0, timesReduced: 8 });
       setModalHeadline('You Lose');
+      updateSelectedHistory();
       setShowModal(true);
       return;
     }
@@ -93,31 +95,47 @@ const HangmanGame: React.FC<Props> = ({ params }) => {
     });
   };
 
-  const selectGuessWord = () => {
+  const filtedUnselectedWords = () => {
     if (unknownWord.word) return;
     if (data.categories.hasOwnProperty(category)) {
       const categoryData =
         data.categories[category as keyof typeof data.categories];
 
-      const unselectedCategoryData = categoryData.filter(
-        (item: SubCategory) => !item.selected
-      );
+      const usedWords: string | null = sessionStorage.getItem('usedWords');
+      let usedWordsParsed: string[] = usedWords && JSON.parse(usedWords);
 
-      if (unselectedCategoryData.length === 0) return;
-
-      let randomIndex: number = Math.floor(
-        Math.random() * unselectedCategoryData.length
-      );
-      let selectedWord: SubCategory = unselectedCategoryData[randomIndex];
-      // selectedWord.selected = true;
-
-      setUnknownWord({
-        count: new Set(selectedWord.name.replaceAll(' ', '').toUpperCase())
-          .size,
-        word: selectedWord.name.toUpperCase(),
-      });
+      if (usedWordsParsed) {
+        const usedWordsSet = new Set(usedWordsParsed);
+        const unselectedCategoryData = categoryData.filter(
+          (item: SubCategory) => !usedWordsSet.has(item.name.toUpperCase())
+        );
+        selectGuessWord(unselectedCategoryData);
+      } else {
+        selectGuessWord(categoryData);
+      }
     }
   };
+  const selectGuessWord = (unselected: SubCategory[]) => {
+    let randomIndex: number = Math.floor(Math.random() * unselected.length);
+    let selectedWord: SubCategory = unselected[randomIndex];
+
+    setUnknownWord({
+      count: new Set(selectedWord.name.replaceAll(' ', '').toUpperCase()).size,
+      word: selectedWord.name.toUpperCase(),
+    });
+  };
+  const updateSelectedHistory = () => {
+    const usedWords: string | null = sessionStorage.getItem('usedWords');
+    let usedWordsParsed: string[] = usedWords && JSON.parse(usedWords);
+    if (usedWordsParsed) {
+      usedWordsParsed.push(unknownWord.word);
+      if (usedWordsParsed.length === 11) usedWordsParsed.shift();
+      sessionStorage.setItem('usedWords', JSON.stringify(usedWordsParsed));
+    } else {
+      sessionStorage.setItem('usedWords', JSON.stringify([unknownWord.word]));
+    }
+  };
+
   const guess = (e: any) => {
     let guessed =
       e.target.tagName == 'P'
